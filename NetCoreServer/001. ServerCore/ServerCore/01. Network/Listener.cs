@@ -5,7 +5,7 @@ namespace ServerCore
 {
     public class Listener
     {
-        private Socket listenSocket;
+        Socket listenSocket;
 
         public void StartListening(IPEndPoint endpoint, int backLog = 100)
         {
@@ -20,7 +20,7 @@ namespace ServerCore
             StartAccept(args);
         }
 
-        private void StartAccept(SocketAsyncEventArgs args)
+        void StartAccept(SocketAsyncEventArgs args)
         {
             args.AcceptSocket = null;
 
@@ -31,7 +31,7 @@ namespace ServerCore
             }
         }
 
-        private void OnAcceptCompleted(object sender, SocketAsyncEventArgs args)
+        void OnAcceptCompleted(object sender, SocketAsyncEventArgs args)
         {
             if (args.SocketError == SocketError.Success)
             {
@@ -45,7 +45,7 @@ namespace ServerCore
             StartAccept(args);
         }
 
-        private void ProcessAccept()
+        void ProcessAccept()
         {
             // TODO : Process Accept
         }
