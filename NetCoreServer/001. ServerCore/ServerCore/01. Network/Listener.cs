@@ -6,12 +6,14 @@ namespace ServerCore
     public class Listener
     {
         Socket listenSocket;
+        Func<Session> sessionFactory;
 
-        public void StartListening(IPEndPoint endpoint, int backLog = 100)
+        public void StartListening(IPEndPoint endPoint, Func<Session> sessionFactory, int backLog = 100)
         {
-            listenSocket = new Socket(endpoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            listenSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+            this.sessionFactory += sessionFactory;
 
-            listenSocket.Bind(endpoint);
+            listenSocket.Bind(endPoint);
 
             listenSocket.Listen(backLog);
 
@@ -35,19 +37,22 @@ namespace ServerCore
         {
             if (args.SocketError == SocketError.Success)
             {
-                ProcessAccept();
+                ProcessAccept(args);
             }
             else
             {
-                // TODO : ERROR LOG
+                Console.WriteLine(args.SocketError.ToString());
             }
 
             StartAccept(args);
         }
 
-        void ProcessAccept()
+        void ProcessAccept(SocketAsyncEventArgs args)
         {
-            // TODO : Process Accept
+            Session session = sessionFactory.Invoke();
+            session.InitializeSession(args.AcceptSocket);
+
+            session.OnConnected(args.AcceptSocket.RemoteEndPoint);
         }
     }
 }
