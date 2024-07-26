@@ -10,6 +10,8 @@ namespace ServerCore
         SocketAsyncEventArgs recvArgs = new SocketAsyncEventArgs();
         SocketAsyncEventArgs sendArgs = new SocketAsyncEventArgs();
 
+        RecvBuffer recvBuffer = new RecvBuffer(65535);
+
         Queue<byte[]> sendQueue = new Queue<byte[]>();
         List<ArraySegment<byte>> pendingList = new List<ArraySegment<byte>>();
 
@@ -19,7 +21,7 @@ namespace ServerCore
 
         public abstract void OnConnected(EndPoint endPoint);
         public abstract void OnDisconnected(EndPoint endPoint);
-        public abstract void OnRecv(ArraySegment<byte> buffer);
+        public abstract int OnRecv(ArraySegment<byte> buffer);
         public abstract void OnSend(int numOfBytes);
 
         public void InitializeSession(Socket socket)
@@ -29,7 +31,6 @@ namespace ServerCore
             sendArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendCompleted);
             recvArgs.Completed += new EventHandler<SocketAsyncEventArgs>(OnRecvCompleted);
             
-            recvArgs.SetBuffer(new byte[1024], 0, 1024);
             StartRecv();
         }
 
@@ -106,6 +107,11 @@ namespace ServerCore
 
         void StartRecv()
         {
+            recvBuffer.Clean();
+
+            ArraySegment<byte> segment = recvBuffer.WriteSegment;
+            recvArgs.SetBuffer(segment.Array, segment.Offset, segment.Count);
+
             bool pending = socket.ReceiveAsync(recvArgs);
             if (pending == false)
             {
@@ -119,7 +125,24 @@ namespace ServerCore
             {
                 try
                 {
-                    OnRecv(new ArraySegment<byte>(args.Buffer, args.Offset, args.BytesTransferred));
+                    if (recvBuffer.OnWrite(args.BytesTransferred) == false)
+                    {
+                        Disconnect();
+                        return;
+                    }
+
+                    int processLen = OnRecv(recvBuffer.ReadSegment);
+                    if (processLen < 0 || processLen > recvBuffer.DataSize)
+                    {
+                        Disconnect();
+                        return;
+                    }
+
+                    if (recvBuffer.OnRead(processLen) == false)
+                    {
+                        Disconnect();
+                        return;
+                    }
 
                     StartRecv();
                 }
