@@ -12,7 +12,7 @@ namespace ServerCore
 
         RecvBuffer recvBuffer = new RecvBuffer(65535);
 
-        Queue<byte[]> sendQueue = new Queue<byte[]>();
+        Queue<ArraySegment<byte>> sendQueue = new Queue<ArraySegment<byte>>();
         List<ArraySegment<byte>> pendingList = new List<ArraySegment<byte>>();
 
         object sendLock = new object();
@@ -61,8 +61,8 @@ namespace ServerCore
         {
             while (sendQueue.Count > 0)
             {
-                byte[] buff = sendQueue.Dequeue();
-                pendingList.Add(new ArraySegment<byte>(buff, 0, buff.Length));
+                ArraySegment<byte> segment = sendQueue.Dequeue();
+                pendingList.Add(segment);
             }
 
             sendArgs.BufferList = pendingList;
