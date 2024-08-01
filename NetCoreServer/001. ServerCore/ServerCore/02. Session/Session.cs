@@ -42,6 +42,16 @@ namespace ServerCore
 
             socket.Shutdown(SocketShutdown.Both);
             socket.Close();
+            Clear();
+        }
+
+        void Clear()
+        {
+            lock (sendLock)
+            {
+                sendQueue.Clear();
+                pendingList.Clear();
+            }
         }
 
         public void Send(byte[] sendBuff)
