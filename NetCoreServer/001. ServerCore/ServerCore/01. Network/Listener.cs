@@ -8,7 +8,7 @@ namespace ServerCore
         Socket listenSocket;
         Func<Session> sessionFactory;
 
-        public void StartListening(IPEndPoint endPoint, Func<Session> sessionFactory, int backLog = 100)
+        public void StartListening(IPEndPoint endPoint, Func<Session> sessionFactory, int acceptorCount = 10, int backLog = 100)
         {
             listenSocket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
             this.sessionFactory += sessionFactory;
@@ -17,9 +17,12 @@ namespace ServerCore
 
             listenSocket.Listen(backLog);
 
-            SocketAsyncEventArgs args = new SocketAsyncEventArgs();
-            args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
-            StartAccept(args);
+            for (int i = 0; i < acceptorCount; i++)
+            {
+                SocketAsyncEventArgs args = new SocketAsyncEventArgs();
+                args.Completed += new EventHandler<SocketAsyncEventArgs>(OnAcceptCompleted);
+                StartAccept(args);
+            }
         }
 
         void StartAccept(SocketAsyncEventArgs args)
