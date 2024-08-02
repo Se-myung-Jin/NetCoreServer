@@ -42,10 +42,14 @@
                 int next = now;
                 
                 if (left <= lastIndex && _heap[next].CompareTo(_heap[left]) < 0)
+                {
                     next = left;
-                
+                }
+
                 if (right <= lastIndex && _heap[next].CompareTo(_heap[right]) < 0)
+                {
                     next = right;
+                }
 
                 if (next == now) break;
 
@@ -61,8 +65,7 @@
 
         public T Peek()
         {
-            if (_heap.Count == 0) 
-                return default(T);
+            if (_heap.Count == 0) return default(T);
 
             return _heap[0];
         }
