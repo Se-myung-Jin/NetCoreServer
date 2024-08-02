@@ -54,7 +54,25 @@ namespace ServerCore
             }
         }
 
-        public void Send(byte[] sendBuff)
+        public void Send(List<ArraySegment<byte>> sendBufferList)
+        {
+            if (sendBufferList.Count == 0) return;
+
+            lock (sendLock)
+            {
+                foreach (ArraySegment<byte> sendBuff in sendBufferList)
+                {
+                    sendQueue.Enqueue(sendBuff);
+                }
+
+                if (pendingList.Count == 0)
+                {
+                    StartSend();
+                }
+            }
+        }
+
+        public void Send(ArraySegment<byte> sendBuff)
         {
             lock (sendLock)
             {
