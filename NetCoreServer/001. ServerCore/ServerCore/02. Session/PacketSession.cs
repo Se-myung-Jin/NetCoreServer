@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ServerCore
+﻿namespace ServerCore
 {
     public abstract class PacketSession : Session
     {
-        public static readonly int HeaderSize = 2;
+        public static readonly short HeaderSize = 2;
 
         public override int OnRecv(ArraySegment<byte> buffer)
         {
