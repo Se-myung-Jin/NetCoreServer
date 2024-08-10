@@ -1,59 +1,39 @@
 ﻿using System.Net;
-using System.Text;
 using ServerCore;
 
 namespace Server
 {
-
-    public class GameSession : Session
-    {
-        public override void OnConnected(EndPoint e)
-        {
-            Console.WriteLine($"OnConnected : {e}");
-
-            byte[] sendBuff = Encoding.UTF8.GetBytes("Welcome to MMORPG Server!");
-            Send(sendBuff);
-            Thread.Sleep(1000);
-            Disconnect();
-        }
-
-        public override void OnDisconnected(EndPoint e)
-        {
-            Console.WriteLine($"OnDisconnected : {e}");
-        }
-
-        public override int OnRecv(ArraySegment<byte> buffer)
-        {
-            string recvData = Encoding.UTF8.GetString(buffer.Array, buffer.Offset, buffer.Count);
-            Console.WriteLine($"[From Client] {recvData}");
-            return buffer.Count;
-        }
-
-        public override void OnSend(int numOfBytes)
-        {
-            Console.WriteLine($"Transferred bytes: {numOfBytes}");
-        }
-    }
-
     class Program
     {
+        public static GameRoom Room = new GameRoom();
+
+        static void FlushRoom()
+        {
+            Room.Push(() => Room.Flush());
+            JobTimer.Instance.Push(FlushRoom, 250);
+        }
+
         static void Main(string[] args)
         {
+            PacketManager.Instance.RegisterPacketHandler();
+
             string host = Dns.GetHostName();
             IPHostEntry entry = Dns.GetHostEntry(host);
             IPAddress ipAddr = entry.AddressList[0];
             IPEndPoint endpoint = new IPEndPoint(ipAddr, 8994);
 
             Listener listener = new Listener();
-            listener.StartListening(endpoint, () => { return new GameSession(); });
+            listener.StartListening(endpoint, () => { return SessionManager.Instance.GenerateSession(); });
 
             Console.WriteLine("Listening...");
+
+            FlushRoom();
 
             try
             {
                 while (true)
                 {
-                    ;
+                    JobTimer.Instance.Flush();
                 }
             }
             catch (Exception ex)
