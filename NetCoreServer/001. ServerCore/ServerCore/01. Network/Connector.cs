@@ -6,6 +6,7 @@ namespace ServerCore
     public class Connector
     {
         Func<Session> sessionFactory;
+
         public void Connect(IPEndPoint endPoint, Func<Session> sessionFactory)
         {
             Socket socket = new Socket(endPoint.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
