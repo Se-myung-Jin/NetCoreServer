@@ -4,30 +4,28 @@ namespace DummyClient
 {
     public class PacketHandler
     {
-        public static void PlayerInfoReqHandler(PacketSession session, IPacket packet)
+        public static void S_BroadcastEnterGameHandler(PacketSession session, IPacket packet)
         {
-            PlayerInfoReq req = packet as PlayerInfoReq;
-
-            Console.WriteLine($"PlayerInfoReq : {req.PlayerId}, {req.Name}");
-
-            foreach (PlayerInfoReq.SkillInfo skill in req.Skills)
-            {
-                Console.WriteLine($"Skill ({skill.id}) ({skill.level}) ({skill.duration})");
-            }
-        }
-
-        public static void ChatReqHandler(PacketSession session, IPacket packet)
-        {
-            
-        }
-
-        public static void ChatResHandler(PacketSession session, IPacket packet)
-        {
-            ChatRes res = packet as ChatRes;
+            S_BroadcastEnterGame pkt = packet as S_BroadcastEnterGame;
             ServerSession serverSession = session as ServerSession;
+        }
 
-            //if (res.PlayerId == 1)
-                //Console.WriteLine(res.Chat);
+        public static void S_BroadcastLeaveGameHandler(PacketSession session, IPacket packet)
+        {
+            S_BroadcastLeaveGame pkt = packet as S_BroadcastLeaveGame;
+            ServerSession serverSession = session as ServerSession;
+        }
+
+        public static void S_PlayerListHandler(PacketSession session, IPacket packet)
+        {
+            S_PlayerList pkt = packet as S_PlayerList;
+            ServerSession serverSession = session as ServerSession;
+        }
+
+        public static void S_BroadcastMoveHandler(PacketSession session, IPacket packet)
+        {
+            S_BroadcastMove pkt = packet as S_BroadcastMove;
+            ServerSession serverSession = session as ServerSession;
         }
     }
 }

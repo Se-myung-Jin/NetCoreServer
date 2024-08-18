@@ -22,13 +22,15 @@ namespace DummyClient
 
         public void RegisterPacketHandler()
         {
-            makePacketDic.Add((ushort)PacketID.PlayerInfoReq, MakePacket<PlayerInfoReq>);
-            makePacketDic.Add((ushort)PacketID.ChatReq, MakePacket<ChatReq>);
-            makePacketDic.Add((ushort)PacketID.ChatRes, MakePacket<ChatRes>);
+            makePacketDic.Add((ushort)PacketID.S_BroadcastEnterGame, MakePacket<S_BroadcastEnterGame>);
+            makePacketDic.Add((ushort)PacketID.S_BroadcastLeaveGame, MakePacket<S_BroadcastLeaveGame>);
+            makePacketDic.Add((ushort)PacketID.S_PlayerList, MakePacket<S_PlayerList>);
+            makePacketDic.Add((ushort)PacketID.S_BroadcastMove, MakePacket<S_BroadcastMove>);
 
-            packetHandlerDic.Add((ushort)PacketID.PlayerInfoReq, PacketHandler.PlayerInfoReqHandler);
-            packetHandlerDic.Add((ushort)PacketID.ChatReq, PacketHandler.ChatReqHandler);
-            packetHandlerDic.Add((ushort)PacketID.ChatRes, PacketHandler.ChatResHandler);
+            packetHandlerDic.Add((ushort)PacketID.S_BroadcastEnterGame, PacketHandler.S_BroadcastEnterGameHandler);
+            packetHandlerDic.Add((ushort)PacketID.S_BroadcastLeaveGame, PacketHandler.S_BroadcastLeaveGameHandler);
+            packetHandlerDic.Add((ushort)PacketID.S_PlayerList, PacketHandler.S_PlayerListHandler);
+            packetHandlerDic.Add((ushort)PacketID.S_BroadcastMove, PacketHandler.S_BroadcastMoveHandler);
         }
 
         void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new()

@@ -22,13 +22,11 @@ namespace Server
 
         public void RegisterPacketHandler()
         {
-            makePacketDic.Add((ushort)PacketID.PlayerInfoReq, MakePacket<PlayerInfoReq>);
-            makePacketDic.Add((ushort)PacketID.ChatReq, MakePacket<ChatReq>);
-            makePacketDic.Add((ushort)PacketID.ChatRes, MakePacket<ChatRes>);
+            makePacketDic.Add((ushort)PacketID.C_LeaveGame, MakePacket<C_LeaveGame>);
+            makePacketDic.Add((ushort)PacketID.C_Move, MakePacket<C_Move>);
 
-            packetHandlerDic.Add((ushort)PacketID.PlayerInfoReq, PacketHandler.PlayerInfoReqHandler);
-            packetHandlerDic.Add((ushort)PacketID.ChatReq, PacketHandler.ChatReqHandler);
-            packetHandlerDic.Add((ushort)PacketID.ChatRes, PacketHandler.ChatResHandler);
+            packetHandlerDic.Add((ushort)PacketID.C_LeaveGame, PacketHandler.C_LeaveGameHandler);
+            packetHandlerDic.Add((ushort)PacketID.C_Move, PacketHandler.C_MoveHandler);
         }
 
         void MakePacket<T>(PacketSession session, ArraySegment<byte> buffer) where T : IPacket, new()
