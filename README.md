@@ -14,8 +14,12 @@ create fast and low latency asynchronous socket server<br><br>
 
 <h3>SocketAsyncEventArgs</h3>
 <ul>
-  <li>닷넷에서 고성능 네트웍 프로그래밍을 하기 위해서는 필연적으로 3.5에서 추가된 SocketAsyncEventArgs 클래스에 대해서 알아야 한다.</li>
+  <li>닷넷에서 고성능 네트워크 프로그래밍을 하기 위해서는 필연적으로 3.5에서 추가된 SocketAsyncEventArgs 클래스에 대해서 알아야 한다.</li>
     <ul><li><a href="http://msdn.microsoft.com/ko-kr/library/system.net.sockets.socketasynceventargs.aspx">SocketAsyncEventArgs</a></li></ul>
   <li>부족한 내용은 다음 CodeProject의 'C# SocketAsyncEventArgs 고성능 소켓 코드'강좌에서 확인할 수 있습니다.</li>
     <ul><li><a href="http://www.codeproject.com/Articles/83102/C-SocketAsyncEventArgs-High-Performance-Socket-Cod">C# SocketAsyncEventArgs 고성능 소켓 코드</a></li></ul>
+  <li>.NET 3.5 이전의 통신 방식과 비교하여 개선된 점은 아래의 사이트에서 확인할 수 있다.</li>
+    <ul><li><a href="https://stackoverflow.com/questions/14856990/await-async-or-socketasynceventargs">비동기 대기와 SocketAsyncEventArgs</a></li></ul>
+  <li>사용법은 msdn에서 샘플 예제를 통해 SocketAsyncEventArgsPool 클래스를 볼 수 있다.</li>
+    <ul><li><a href="https://learn.microsoft.com/ko-kr/dotnet/api/system.net.sockets.socketasynceventargs.-ctor?view=net-8.0">SocketAsyncEventArgsPool 샘플</a></li></ul>
 </ul>
