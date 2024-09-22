@@ -48,6 +48,7 @@ namespace ServerCore
         {
             Session session = sessionFactory.Invoke();
             session.InitializeSession(args.ConnectSocket);
+
             session.OnConnected(args.RemoteEndPoint);
         }
     }
