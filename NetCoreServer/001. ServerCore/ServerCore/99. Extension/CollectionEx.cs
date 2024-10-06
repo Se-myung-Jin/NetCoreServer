@@ -45,5 +45,11 @@ namespace ServerCore
 
             return dictionary;
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsNullOrEmpty<T>(this List<T> list)
+        {
+            return list is null || list.Count() == 0;
+        }
     }
 }
